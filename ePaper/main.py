@@ -1,29 +1,5 @@
 #encoding:utf8
-##
- #  @filename   :   main.cpp
- #  @brief	  :   2.7inch e-paper display demo
- #  @author	 :   Yehui from Waveshare
- #
- #  Copyright (C) Waveshare	 August 16 2017
- #
- # Permission is hereby granted, free of charge, to any person obtaining a copy
- # of this software and associated documnetation files (the "Software"), to deal
- # in the Software without restriction, including without limitation the rights
- # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- # copies of the Software, and to permit persons to  whom the Software is
- # furished to do so, subject to the following conditions:
- #
- # The above copyright notice and this permission notice shall be included in
- # all copies or substantial portions of the Software.
- #
- # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- # FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- # LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- # THE SOFTWARE.
- ##
+
 import sys
 import os
 import signal
@@ -49,7 +25,6 @@ class display(api):
 	stop=False
 	threads=[]
 	times=0
-
 	def newImage(self):
 		self.image = Image.new('1', (self.WIDTH, self.HEIGHT), 255)
 		self.draw = ImageDraw.Draw(self.image)
@@ -84,9 +59,9 @@ class display(api):
 		now = datetime.datetime.now()
 		fontB = ImageFont.truetype('/root/ePaper/pixelmix.ttf', 56)
 		self.draw.text((0, 0), now.strftime("%H:%M"), font = fontB, fill = 0)
-		fontM= ImageFont.truetype('/root/ePaper/pixelmix.ttf',20)
+		fontM= ImageFont.truetype('/root/ePaper/pixelmix.ttf',18)
 		self.draw.rectangle((0, 60, 176, 80), fill = 0)
-		self.draw.text((1, 60), now.strftime(u"%y-%m-%d"), font = fontM, fill = 255)		
+		self.draw.text((2, 60), now.strftime(u"%y-%m-%d %a"), font = fontM, fill = 255)
 	def contentRender(self,draw):
 		self.weatherRender()
 	def imgRender(self):
@@ -116,30 +91,40 @@ class display(api):
 		if self.times > 10 or self.times==0:
 			self.weather=self.weatherHandler()
 			self.times = 0
+		y=80
 		fontxB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 36)
 		fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 26)
 		fontM=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 22)
 		fontS=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyh.ttc', 12)
 		fontxS=ImageFont.truetype('/root/ePaper/pixelmix.ttf', 8)
 		fontSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 14)
-		self.draw.text((0,84),self.weather["temp"],font=fontSb,fill=0)
-		self.draw.text((80,84),self.weather["weather"],font=fontxB,fill=0)
-		self.draw.text((0,100),self.weather["wind"],font=fontS,fill=0)
-		self.draw.rectangle((60,87,82,99),outline=0,fill=255)
-		self.draw.text((61,85),self.weather["aqi"],font=fontS,fill=0)
-		self.draw.text((58,110),self.weather["time"],font=fontxS,fill=0)
-		y=120
+		self.draw.text((0,y),self.weather["temp"],font=fontSb,fill=0)
+		if len(self.weather["weather"])>3:
+			tmpvar =fontB
+		else:
+			tmpvar = fontxB
+		self.draw.text((80,y),self.weather["weather"],font=tmpvar,fill=0)
+		self.draw.rectangle((60,y+2,82,y+14),outline=0,fill=255)
+		self.draw.text((61,y),self.weather["aqi"],font=fontS,fill=0)
+		y+=17
+		self.draw.text((0,y),self.weather["wind"],font=fontS,fill=0)
+		self.draw.text((58,y+7),self.weather["time"],font=fontxS,fill=0)
+		y+=20
 		x=1
 		for detail in self.weather["detail"]:
 			self.draw.text((x,y),detail["stime"],font=fontxS,fill=0)
 			self.draw.text((x,y+4),detail["temp"],font=fontS,fill=0)
 			self.draw.text((x+26,y+4),detail["weather"],font=fontS,fill=0)
 			x+=58
-		y+=24
+		y+=20
 		for future in self.weather["future"]:
+			if len(future["weather"])>3:
+				tmpvar =fontM
+			else:
+				tmpvar = fontB
 			self.draw.text((0,y),future["temp"],font=fontSb,fill=0)
 			self.draw.text((58,y),future["week"],font=fontS,fill=0)
-			self.draw.text((82,y+4),self.weather["weather"],font=fontB,fill=0)
+			self.draw.text((82,y+4),self.weather["weather"],font=tmpvar,fill=0)
 			y+=15
 			self.draw.text((0,y),future["wind"],font=fontS,fill=0)
 			self.draw.text((58,y),future["sunrise"],font=fontxS,fill=0)
@@ -162,6 +147,8 @@ d=display()
 def signalHandle(signal, frame):
 	d.quit()
 	sys.exit(0)
+
+signal.signal(signal.SIGTERM, signalHandle)
 signal.signal(signal.SIGINT, signalHandle)
 if __name__ == '__main__':
 	while True:

@@ -264,11 +264,11 @@ class EPD:
     def display_frame(self, frame_buffer, fast=False):
         self.wait_until_idle()
         if (frame_buffer != None):
-            self.send_command(DATA_START_TRANSMISSION_1)           
-            # self.delay_ms(2)
-            for i in range(0, self.width * self.height / 8):
-                self.send_data(0xFF)  
-            # self.delay_ms(2)                  
+            # self.send_command(DATA_START_TRANSMISSION_1)           
+            # # self.delay_ms(2)
+            # for i in range(0, self.width * self.height / 8):
+            #     self.send_data(0xFF)  
+            # # self.delay_ms(2)                  
             self.send_command(DATA_START_TRANSMISSION_2)
             # self.delay_ms(2)
             for i in range(0, self.width * self.height / 8):
