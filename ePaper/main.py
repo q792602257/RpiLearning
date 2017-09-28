@@ -91,25 +91,28 @@ class display(api):
 		if self.times > 10 or self.times==0:
 			self.weather=self.weatherHandler()
 			self.times = 0
-		y=80
-		fontxB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 36)
-		fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 26)
+		y=82
+		fontxB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 40)
+		fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 30)
 		fontM=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 22)
 		fontS=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyh.ttc', 12)
 		fontxS=ImageFont.truetype('/root/ePaper/pixelmix.ttf', 8)
-		fontSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 14)
-		self.draw.text((0,y),self.weather["temp"],font=fontSb,fill=0)
-		if len(self.weather["weather"])>3:
-			tmpvar =fontB
+		fontSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 20)
+		self.draw.text((0,y-4),self.weather["temp"],font=fontSb,fill=0)
+		if len(self.weather["weather"])<=2:
+			tmpvar =fontxB
+		elif len(self.weather["weather"])=3:
+			tmpvar = fontB
 		else:
-			tmpvar = fontxB
+			tmpvar = fontM
 		self.draw.text((80,y),self.weather["weather"],font=tmpvar,fill=0)
-		self.draw.rectangle((60,y+2,82,y+14),outline=0,fill=255)
-		self.draw.text((61,y),self.weather["aqi"],font=fontS,fill=0)
-		y+=17
-		self.draw.text((0,y),self.weather["wind"],font=fontS,fill=0)
-		self.draw.text((58,y+7),self.weather["time"],font=fontxS,fill=0)
 		y+=20
+		self.draw.text((58,y+1),self.weather["time"],font=fontxS,fill=0)
+		self.draw.rectangle((60,y+10,82,y+22),outline=0,fill=255)
+		y+=8
+		self.draw.text((61,y),self.weather["aqi"],font=fontS,fill=0)
+		self.draw.text((0,y-1),self.weather["wind"],font=fontS,fill=0)
+		y+=16
 		x=1
 		for detail in self.weather["detail"]:
 			self.draw.text((x,y),detail["stime"],font=fontxS,fill=0)
