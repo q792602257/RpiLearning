@@ -12,9 +12,6 @@ camera.resolution = [1600,1200]
 camera.awb_mode = 'auto'
 camera.framerate = 5
 sleep(1)
-camera.start_recording("1.mp4",format='h264', quality=20)
-camera.wait_recording(15)
-camera.stop_recording()
 camera.capture("/root/1.jpg")
 # raw=PiRGBArray(camera)
 # camera.capture(raw,format="rgb")
