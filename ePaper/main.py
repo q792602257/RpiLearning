@@ -94,45 +94,58 @@ class display(api):
 		fontSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 20)
 		fontMb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 24)
 		fontxSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 14)
-		self.draw.text((0,y),self.weather["weather"],font=fontxB,fill=0)
-		self.draw.text((96,y-3),self.weather["wind"],font=fontS,fill=0)
-		self.draw.rectangle((153,y,self.WIDTH-1,y+12),outline=0,fill=255)
-		self.draw.text((154,y-2),"%3s"%self.weather["aqi"],font=fontS,fill=0)
-		y+=13
-		self.draw.text((150,y),self.weather["time"],font=fontxS,fill=0)
-		self.draw.text((96,y),self.weather["pressure"],font=fontxS,fill=0)
-		self.draw.text((106,y+5),u"24h温度走势",font=fontS,fill=0)
-		y+=20
-		self.draw.text((0,y),self.weather["temp"],font=fontSb,fill=0)
-		x=104
-		y+=20
-		self.draw.text((106,y+20),u"24h风力走势",font=fontS,fill=0)
-		for detail in self.weather["detail"]:
-			if u"雨" in detail["weather"] or u"雪" in detail["weather"]:
-				tmpvar1 = 0
+		try:
+			self.draw.text((0,y),self.weather["weather"],font=fontxB,fill=0)
+			self.draw.text((96,y-3),self.weather["wind"],font=fontS,fill=0)
+			self.draw.rectangle((153,y,self.WIDTH-1,y+12),outline=0,fill=255)
+			self.draw.text((154,y-2),"%3s"%self.weather["aqi"],font=fontS,fill=0)
+			y+=13
+			self.draw.text((150,y),self.weather["time"],font=fontxS,fill=0)
+			self.draw.text((96,y),self.weather["pressure"],font=fontxS,fill=0)
+			self.draw.text((106,y+5),u"24h温度走势",font=fontS,fill=0)
+			y+=20
+			self.draw.text((0,y),self.weather["temp"],font=fontSb,fill=0)
+			x=104
+			y+=20
+			self.draw.text((106,y+20),u"24h风力走势",font=fontS,fill=0)
+			for detail in self.weather["detail"]:
+				if u"雨" in detail["weather"] or u"雪" in detail["weather"]:
+					tmpvar1 = 0
+				else:
+					tmpvar1 = 255
+				self.draw.rectangle((x,y,x+3,y-(detail["tempRaw"]-self.weather["tempRaw"])*1.5),outline=0,fill=tmpvar1)
+				ty=y+72
+				self.draw.rectangle((x,ty,x+3,ty-(detail["windRaw"])/1.25),outline=0,fill=tmpvar1)
+				x+=3
+			y+=10
+			x=0
+			for future in self.weather["future"]:
+				if len(future["weather"])>3:
+					tmpvar =fontxSb
+				else:
+					tmpvar =fontN
+				self.draw.text((26,y),future["temp"],font=fontxSb,fill=0)
+				self.draw.text((0,y),future["week"],font=fontS,fill=0)
+				y+=15
+				self.draw.text((26,y-2),future["weather"],font=tmpvar,fill=0)
+				# self.draw.text((0,y),future["wind"],font=fontS,fill=0)
+				self.draw.text((0,y),future["sunrise"],font=fontxS,fill=0)
+				self.draw.text((0,y+8),future["sunset"],font=fontxS,fill=0)
+				y+=17
+		except Exception as e:
+			self.error=True
+			if weather["Error"]:
+				self.einfo=weather["Error"]
 			else:
-				tmpvar1 = 255
-			self.draw.rectangle((x,y,x+3,y-(detail["tempRaw"]-self.weather["tempRaw"])*1.5),outline=0,fill=tmpvar1)
-			ty=y+72
-			self.draw.rectangle((x,ty,x+3,ty-(detail["windRaw"])/1.25),outline=0,fill=tmpvar1)
-			x+=3
-		y+=10
-		x=0
-		for future in self.weather["future"]:
-			if len(future["weather"])>3:
-				tmpvar =fontxSb
-			else:
-				tmpvar =fontN
-			self.draw.text((26,y),future["temp"],font=fontxSb,fill=0)
-			self.draw.text((0,y),future["week"],font=fontS,fill=0)
-			y+=15
-			self.draw.text((26,y-2),future["weather"],font=tmpvar,fill=0)
-			# self.draw.text((0,y),future["wind"],font=fontS,fill=0)
-			self.draw.text((0,y),future["sunrise"],font=fontxS,fill=0)
-			self.draw.text((0,y+8),future["sunset"],font=fontxS,fill=0)
-			y+=17
-	def error(self):
-		pass
+				self.einfo=u"未知错误"
+			self.error()
+	def errorRender(self):
+		if self.einfo and self.error:
+			fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 28)
+			self.draw.rectangle(( 0, 0, self.WIDTH, self.HEIGHT), fill = 0)
+			self.draw.text((0,50),self.info,font=fontB,fill=255)
+			self.error=False
+			self.einfo=None			
 	def quit(self):
 		self.message=True
 		self.info=u"已退出"

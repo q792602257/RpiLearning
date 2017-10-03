@@ -130,45 +130,53 @@ class api():
 	def newWeatherHandler(self):
 		code="101240201019"
 		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.705078&longitude=116.00193&isLocated=true&sign=zUFJoAR2ZVrDy1vF3D07&locationKey=weathercn+%s&days=3&appKey=weather20170124&isGlobal=false&locale=zh_cn"%code
-		html = self.getHTML(url)
-		jdata=json.loads(html)
-		ret={}
-		ret["aqi"]=jdata["aqi"]["aqi"]
-		ret["city"]="九江"
-		ret["tempRaw"]=int(jdata["current"]["temperature"]["value"])
-		ret["temp"]="%s(%d)℃"%(jdata["current"]["temperature"]["value"],float(jdata["current"]["feelsLike"]["value"]))
-		ret["pressure"]="%shPa"%(jdata["current"]["pressure"]["value"])
-		ret["weather"]=self.newWeatherCodeHandler(jdata["current"]["weather"])
-		ret["time"]=jdata["current"]["pubTime"][11:16]
-		ret["wet"]="%s"%jdata["current"]["humidity"]
-		ret["wind"]=self.windHandler(jdata["current"]["wind"]["direction"]['value'],jdata["current"]["wind"]["speed"]['value'])
-		ret["detail"]=[]
-		ret["future"]=[]
-		for i in range(0,23):
-			t={}
-			t["tempRaw"]=int(jdata["forecastHourly"]["temperature"]["value"][i])
-			t["temp"]=u"%s℃"%(jdata["forecastHourly"]["temperature"]["value"][i])
-			t["weather"]=self.newWeatherCodeHandler(jdata["forecastHourly"]["weather"]["value"][i])
-			t["stime"]=jdata["forecastHourly"]["wind"]["value"][i]["datetime"][11:16]
-			t["wind"]=self.windHandler("",jdata["forecastHourly"]["wind"]['value'][i]["speed"])
-			t["windRaw"]=float(jdata["forecastHourly"]["wind"]['value'][i]["speed"])
-			ret["detail"].append(t)
-		tmp=[u"今天",u"明天",u"后天"]
-		for j in range(0,3):
-			t={}
-			# forecastDaily
-			t["date"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["from"][5:10]
-			t["week"]=tmp[j]
-			t1=jdata["forecastDaily"]["weather"]["value"][j]["from"]
-			t2=jdata["forecastDaily"]["weather"]["value"][j]["to"]
-			if t1==t2:
-				t["weather"]=self.newWeatherCodeHandler(t1)
+		try:
+			html = self.getHTML(url)
+			jdata=json.loads(html)
+			ret={}
+			ret["aqi"]=jdata["aqi"]["aqi"]
+			ret["city"]="九江"
+			ret["tempRaw"]=int(jdata["current"]["temperature"]["value"])
+			ret["temp"]="%s(%d)℃"%(jdata["current"]["temperature"]["value"],float(jdata["current"]["feelsLike"]["value"]))
+			ret["pressure"]="%shPa"%(jdata["current"]["pressure"]["value"])
+			ret["weather"]=self.newWeatherCodeHandler(jdata["current"]["weather"])
+			ret["time"]=jdata["current"]["pubTime"][11:16]
+			ret["wet"]="%s"%jdata["current"]["humidity"]
+			ret["wind"]=self.windHandler(jdata["current"]["wind"]["direction"]['value'],jdata["current"]["wind"]["speed"]['value'])
+			ret["detail"]=[]
+			ret["future"]=[]
+			for i in range(0,23):
+				t={}
+				t["tempRaw"]=int(jdata["forecastHourly"]["temperature"]["value"][i])
+				t["temp"]=u"%s℃"%(jdata["forecastHourly"]["temperature"]["value"][i])
+				t["weather"]=self.newWeatherCodeHandler(jdata["forecastHourly"]["weather"]["value"][i])
+				t["stime"]=jdata["forecastHourly"]["wind"]["value"][i]["datetime"][11:16]
+				t["wind"]=self.windHandler("",jdata["forecastHourly"]["wind"]['value'][i]["speed"])
+				t["windRaw"]=float(jdata["forecastHourly"]["wind"]['value'][i]["speed"])
+				ret["detail"].append(t)
+			tmp=[u"今天",u"明天",u"后天"]
+			for j in range(0,3):
+				t={}
+				# forecastDaily
+				t["date"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["from"][5:10]
+				t["week"]=tmp[j]
+				t1=jdata["forecastDaily"]["weather"]["value"][j]["from"]
+				t2=jdata["forecastDaily"]["weather"]["value"][j]["to"]
+				if t1==t2:
+					t["weather"]=self.newWeatherCodeHandler(t1)
+				else:
+					t["weather"]=u"%s转%s"%(self.newWeatherCodeHandler(t1),self.newWeatherCodeHandler(t2))
+				t["sunrise"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["from"][11:16]
+				t["sunset"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["to"][11:16]
+				t["temp"]=u"%s/%s℃"%(jdata["forecastDaily"]["temperature"]["value"][j]["from"],jdata["forecastDaily"]["temperature"]["value"][j]["to"])
+				t["wind"]=self.windHandler(jdata["forecastDaily"]["wind"]["direction"]['value'][j]["from"],jdata["forecastDaily"]["wind"]["speed"]['value'][j]["from"])
+				ret["future"].append(t)
+			self.oldret=ret
+			return ret
+		except Exception as e:
+			print html
+			if self.oldret:
+				return self.oldret
 			else:
-				t["weather"]=u"%s转%s"%(self.newWeatherCodeHandler(t1),self.newWeatherCodeHandler(t2))
-			t["sunrise"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["from"][11:16]
-			t["sunset"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["to"][11:16]
-			t["temp"]=u"%s/%s℃"%(jdata["forecastDaily"]["temperature"]["value"][j]["from"],jdata["forecastDaily"]["temperature"]["value"][j]["to"])
-			t["wind"]=self.windHandler(jdata["forecastDaily"]["wind"]["direction"]['value'][j]["from"],jdata["forecastDaily"]["wind"]["speed"]['value'][j]["from"])
-			ret["future"].append(t)
-		return ret
+				return {"Error":u"请连接网络"}
 
