@@ -144,7 +144,7 @@ class api():
 			return self.oldret
 		try:
 			jdata=json.loads(html)
-			if jdata['Error']:
+			if jdata.has_key('Error'):
 				return jdata
 			ret={}
 			ret["aqi"]=jdata["aqi"]["aqi"]
@@ -187,9 +187,9 @@ class api():
 			self.oldret=ret
 			return ret
 		except Exception as e:
-			print e
 			if vars().has_key('html'):
 				print html
+			print e
 			if vars().has_key('self.oldret'):
 				return self.oldret
 			else:
