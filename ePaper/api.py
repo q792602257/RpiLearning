@@ -13,13 +13,18 @@ class api():
 	times=0
 	headers={"Connection": "Keep-Alive","User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"}
 	def getHTML(self,url,method="GET",data=None):
-		if method=="GET":
-			page=self.opener.get(url,headers=self.headers)
-			html=page.text
-		elif method=="POST":
-			page=self.opener.post(url,data=data,headers=self.headers)
-			html=page.text
-		return html
+		try:
+			if method=="GET":
+				page=self.opener.get(url,headers=self.headers)
+				html=page.text
+			elif method=="POST":
+				page=self.opener.post(url,data=data,headers=self.headers)
+				html=page.text
+		except Exception as e:
+			print e
+			html="{'Error'='{e}'}"
+		finally:
+			return html
 	def weatherHandler(self):
 		code="101240201"
 		url="http://aider.meizu.com/app/weather/listWeather?cityIds=%s"%code
@@ -139,6 +144,8 @@ class api():
 			return self.oldret
 		try:
 			jdata=json.loads(html)
+			if jdata['Error']:
+				return jdata
 			ret={}
 			ret["aqi"]=jdata["aqi"]["aqi"]
 			ret["city"]="九江"
@@ -181,9 +188,9 @@ class api():
 			return ret
 		except Exception as e:
 			print e
-			if html:
+			if vars().has_key('html'):
 				print html
-			if self.oldret:
+			if vars().has_key('self.oldret'):
 				return self.oldret
 			else:
 				return {"Error":u"请连接网络"}

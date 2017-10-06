@@ -134,16 +134,16 @@ class display(api):
 				y+=17
 		except Exception as e:
 			self.error=True
-			if weather["Error"]:
-				self.einfo=weather["Error"]
+			if self.weather.has_key("Error"):
+				self.einfo=self.weather["Error"]
 			else:
 				self.einfo=u"未知错误"
-			self.error()
+			self.errorRender()
 	def errorRender(self):
 		if self.einfo and self.error:
 			fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 28)
 			self.draw.rectangle(( 0, 0, self.WIDTH, self.HEIGHT), fill = 0)
-			self.draw.text((0,50),self.info,font=fontB,fill=255)
+			self.draw.text((0,50),self.einfo,font=fontB,fill=255)
 			self.error=False
 			self.einfo=None			
 	def quit(self):
