@@ -10,6 +10,7 @@ sys.setdefaultencoding('utf8')
 class api():
 	opener = requests.Session()
 	# opener.cookies=MozillaCookieJar()
+	times=0
 	headers={"Connection": "Keep-Alive","User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"}
 	def getHTML(self,url,method="GET",data=None):
 		if method=="GET":
@@ -74,7 +75,7 @@ class api():
  	def windHandler(self,direction="",speed=""):
 		if len(direction)!=0:
 			direction = float(direction) 
-			if direction>337.5 and direction<360.0:
+			if direction>337.5 and direction<=360.0:
 				d = u"北风"
 			elif direction > 292.5:
 				d = u"西北风"
@@ -130,8 +131,13 @@ class api():
 	def newWeatherHandler(self):
 		code="101240201019"
 		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.705078&longitude=116.00193&isLocated=true&sign=zUFJoAR2ZVrDy1vF3D07&locationKey=weathercn+%s&days=3&appKey=weather20170124&isGlobal=false&locale=zh_cn"%code
-		try:
+		if self.times>5 or self.times==0:
 			html = self.getHTML(url)
+			self.times=1
+		else:
+			self.times+=1
+			return self.oldret
+		try:
 			jdata=json.loads(html)
 			ret={}
 			ret["aqi"]=jdata["aqi"]["aqi"]
@@ -174,7 +180,9 @@ class api():
 			self.oldret=ret
 			return ret
 		except Exception as e:
-			print html
+			print e
+			if html:
+				print html
 			if self.oldret:
 				return self.oldret
 			else:

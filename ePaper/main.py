@@ -113,9 +113,9 @@ class display(api):
 					tmpvar1 = 0
 				else:
 					tmpvar1 = 255
-				self.draw.rectangle((x,y,x+3,y-(detail["tempRaw"]-self.weather["tempRaw"])*1.5),outline=0,fill=tmpvar1)
+				self.draw.rectangle((x,y,x+3,y-(detail["tempRaw"]-self.weather["tempRaw"])*1.6),outline=0,fill=tmpvar1)
 				ty=y+72
-				self.draw.rectangle((x,ty,x+3,ty-(detail["windRaw"])/1.25),outline=0,fill=tmpvar1)
+				self.draw.rectangle((x,ty,x+3,ty-(detail["windRaw"])/1.2),outline=0,fill=tmpvar1)
 				x+=3
 			y+=10
 			x=0
