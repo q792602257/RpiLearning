@@ -160,6 +160,10 @@ class display(api):
 			sys.exit()
 		else:
 			self.main()
+	def multilineHandler(self,context,size=16):
+		count=self.WIDTH/size
+		
+		pass
 class buttom(display):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(5,GPIO.IN)
