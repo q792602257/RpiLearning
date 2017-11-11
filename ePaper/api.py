@@ -4,8 +4,8 @@ import json
 # from cookiejar import MozillaCookieJar
 import sys
 import os
-reload(sys)
-sys.setdefaultencoding('utf8')
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 
 class api():
 	opener = requests.Session()
@@ -21,7 +21,7 @@ class api():
 				page=self.opener.post(url,data=data,headers=self.headers)
 				html=page.text
 		except Exception as e:
-			print e
+			print (e)
 			html="{'Error'='{e}'}"
 		finally:
 			return html
@@ -77,7 +77,7 @@ class api():
 		24:u"暴雨-大暴雨",25:u"大暴雨-特大暴雨",26:u"小雪-中雪",27:u"中雪-大雪",28:u"大雪-暴雪",29:u"浮沉",
 		30:u"扬沙",31:u"强沙尘暴",32:u"飑",33:u"龙卷风",34:u"若高吹雪",35:u"轻雾",53:u"霾",99:u"未知"}
 		return weathercode[int(code)]
- 	def windHandler(self,direction="",speed=""):
+	def windHandler(self,direction="",speed=""):
 		if len(direction)!=0:
 			direction = float(direction) 
 			if direction>337.5 and direction<=360.0:
@@ -188,8 +188,8 @@ class api():
 			return ret
 		except Exception as e:
 			if vars().has_key('html'):
-				print html
-			print e
+				print (html)
+			print (e)
 			if vars().has_key('self.oldret'):
 				return self.oldret
 			else:
