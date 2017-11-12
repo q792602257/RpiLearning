@@ -1,12 +1,14 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
+# coding:utf8
+import Image
+import ImageFont
+import ImageDraw
 import datetime
 import time
 import sys
 import os
 from api import api
-
+reload(sys)
+sys.setdefaultencoding("utf8")
 
 class display(api):
 	WIDTH = 176
