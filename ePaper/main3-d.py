@@ -59,7 +59,12 @@ class display(api):
 		y+=33
 		self.draw.line((0,y, self.WIDTH, y), fill=0)
 		y+=2
-		settings=["系统设置","无线设置","其他设置","shezhi设置"]
+		settings=[
+			"系统设置",
+			"Wi-Fi设置",
+			"监控设置",
+			"其他设置",
+			"shezhi设置"]
 		for i in range(len(settings)):
 			self.draw.text((0, y), "%d.%s"%(i,settings[i]), font=fontS, fill=0)
 			y+=18

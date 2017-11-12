@@ -82,6 +82,32 @@ class display(api):
 		self.datetimeRender(self.draw)
 		self.contentRender(self.draw)
 		self.menuRender(self.draw)
+	def smallTimeRender(self, draw,text="My Rpi ePaper"):
+		now = datetime.datetime.now()
+		fontS = ImageFont.truetype('C:/Windows/Fonts/msyh.ttc', 12)
+		self.draw.text((148, -1), now.strftime("%H:%M"), font=fontS, fill=0)
+		self.draw.text((116, -1), now.strftime(u"%m-%d"), font=fontS, fill=0)
+		self.draw.text((0, -1),text, font=fontS, fill=0)
+		self.draw.line((0,14,self.WIDTH,14),fill=0)
+
+	def settingShow(self, draw):
+		self.smallTimeRender(self.draw, "设置")
+		fontB = ImageFont.truetype('C:/Windows/Fonts/Dengb.ttf', 32)
+		fontS = ImageFont.truetype('C:/Windows/Fonts/Dengb.ttf', 16)
+		y = 17
+		self.draw.text((0, y), "设置界面", font=fontB, fill=0)
+		y += 33
+		self.draw.line((0, y, self.WIDTH, y), fill=0)
+		y += 2
+		settings = [
+			"系统设置",
+			"Wi-Fi设置",
+			"监控设置",
+			"其他设置",
+			"shezhi设置"]
+		for i in range(len(settings)):
+			self.draw.text((0, y), "%d.%s" % (i, settings[i]), font=fontS, fill=0)
+			y += 18
 	def weatherRender(self):
 		self.weather=self.newWeatherHandler()
 		y=82

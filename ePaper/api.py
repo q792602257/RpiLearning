@@ -4,8 +4,8 @@ import json
 # from cookiejar import MozillaCookieJar
 import sys
 import os
-# reload(sys)
-# sys.setdefaultencoding('utf8')
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class api():
 	opener = requests.Session()
@@ -135,9 +135,10 @@ class api():
 		return "%s%s"%(d,s)
 	def newWeatherHandler(self):
 		code="101240201019"
-		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.705078&longitude=116.00193&isLocated=true&sign=zUFJoAR2ZVrDy1vF3D07&locationKey=weathercn+%s&days=3&appKey=weather20170124&isGlobal=false&locale=zh_cn"%code
+		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.705078&longitude=116.00193&isLocated=true&sign=zUFJoAR2ZVrDy1vF3D07&locationKey=weathercn+%s&days=3&appKey=weather20171109&isGlobal=false&locale=zh_cn"%code
 		if self.times>5 or self.times==0:
 			html = self.getHTML(url)
+			print (html)
 			self.times=1
 		else:
 			self.times+=1
@@ -194,4 +195,3 @@ class api():
 				return self.oldret
 			else:
 				return {"Error":u"请连接网络"}
-
