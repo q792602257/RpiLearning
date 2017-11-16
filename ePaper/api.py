@@ -134,11 +134,10 @@ class api():
 			d=u""
 		return "%s%s"%(d,s)
 	def newWeatherHandler(self):
-		code="101240201019"
-		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.705078&longitude=116.00193&isLocated=true&sign=zUFJoAR2ZVrDy1vF3D07&locationKey=weathercn+%s&days=3&appKey=weather20171109&isGlobal=false&locale=zh_cn"%code
+		code="101240201"
+		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.721263&longitude=115.999853&isLocated=true&locationKey=weathercn:%s&days=15&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&romVersion=7.11.9&appVersion=102&alpha=false&isGlobal=false&device=ido&modDevice=ido_xhdpi&locale=zh_cn"%code
 		if self.times>5 or self.times==0:
 			html = self.getHTML(url)
-			print (html)
 			self.times=1
 		else:
 			self.times+=1
@@ -159,7 +158,7 @@ class api():
 			ret["wind"]=self.windHandler(jdata["current"]["wind"]["direction"]['value'],jdata["current"]["wind"]["speed"]['value'])
 			ret["detail"]=[]
 			ret["future"]=[]
-			for i in range(0,23):
+			for i in range(0,34):
 				t={}
 				t["tempRaw"]=int(jdata["forecastHourly"]["temperature"]["value"][i])
 				t["temp"]=u"%s℃"%(jdata["forecastHourly"]["temperature"]["value"][i])
