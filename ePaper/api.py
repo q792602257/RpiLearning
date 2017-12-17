@@ -150,7 +150,7 @@ class api():
 			ret["aqi"]=jdata["aqi"]["aqi"]
 			ret["city"]="九江"
 			ret["tempRaw"]=int(jdata["current"]["temperature"]["value"])
-			ret["temp"]="%s(%d)℃"%(jdata["current"]["temperature"]["value"],float(jdata["current"]["feelsLike"]["value"]))
+			ret["temp"]="%2s[%.1f]℃"%(jdata["current"]["temperature"]["value"],float(jdata["current"]["feelsLike"]["value"]))
 			ret["pressure"]="%shPa"%(jdata["current"]["pressure"]["value"])
 			ret["weather"]=self.newWeatherCodeHandler(jdata["current"]["weather"])
 			ret["time"]=jdata["current"]["pubTime"][11:16]
@@ -158,7 +158,7 @@ class api():
 			ret["wind"]=self.windHandler(jdata["current"]["wind"]["direction"]['value'],jdata["current"]["wind"]["speed"]['value'])
 			ret["detail"]=[]
 			ret["future"]=[]
-			for i in range(0,34):
+			for i in range(0,35):
 				t={}
 				t["tempRaw"]=int(jdata["forecastHourly"]["temperature"]["value"][i])
 				t["temp"]=u"%s℃"%(jdata["forecastHourly"]["temperature"]["value"][i])
@@ -181,7 +181,7 @@ class api():
 					t["weather"]=u"%s转%s"%(self.newWeatherCodeHandler(t1),self.newWeatherCodeHandler(t2))
 				t["sunrise"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["from"][11:16]
 				t["sunset"]=jdata["forecastDaily"]["sunRiseSet"]["value"][j]["to"][11:16]
-				t["temp"]=u"%s/%s℃"%(jdata["forecastDaily"]["temperature"]["value"][j]["from"],jdata["forecastDaily"]["temperature"]["value"][j]["to"])
+				t["temp"]=u"%2s/%2s℃"%(jdata["forecastDaily"]["temperature"]["value"][j]["from"],jdata["forecastDaily"]["temperature"]["value"][j]["to"])
 				t["wind"]=self.windHandler(jdata["forecastDaily"]["wind"]["direction"]['value'][j]["from"],jdata["forecastDaily"]["wind"]["speed"]['value'][j]["from"])
 				ret["future"].append(t)
 			self.oldret=ret

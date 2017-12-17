@@ -50,7 +50,7 @@ class display(api):
 		self.epd.display_frame(self.epd.get_frame_buffer(self.image),True)
 		return True
 	def menuRender(self,draw):
-		fontM=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/simfang.ttf', 17)
+		fontM = ImageFont.truetype('/root/ePaper/SCbold.ttf', 17)
 		x=1
 		for i in self.menuL:
 			self.draw.rectangle((x, self.HEIGHT-18, x+42, self.HEIGHT), fill = 0)
@@ -60,9 +60,9 @@ class display(api):
 		now = datetime.datetime.now()
 		fontB = ImageFont.truetype('/root/ePaper/pixelmix.ttf', 56)
 		self.draw.text((0, 0), now.strftime("%H:%M"), font = fontB, fill = 0)
-		fontM= ImageFont.truetype('/root/ePaper/pixelmix.ttf',18)
-		self.draw.rectangle((0, 60, 176, 80), fill = 0)
-		self.draw.text((2, 60), now.strftime(u"%y-%m-%d %a"), font = fontM, fill = 255)
+		fontM = ImageFont.truetype('/root/ePaper/SCbold.ttf', 18)
+		self.draw.rectangle((0, 59, 176, 80), fill = 0)
+		self.draw.text((95, 59), now.strftime(u"%m/%d %a"), font = fontM, fill = 255)
 	def contentRender(self,draw):
 		if self.containerID==0:
 			self.weatherRender()
@@ -81,7 +81,7 @@ class display(api):
 	def imgRender(self):
 		self.datetimeRender(self.draw)
 		self.contentRender(self.draw)
-		self.menuRender(self.draw)
+		# self.menuRender(self.draw)
 	def smallTimeRender(self, draw,text="My Rpi ePaper"):
 		now = datetime.datetime.now()
 		fontS = ImageFont.truetype('C:/Windows/Fonts/msyh.ttc', 12)
@@ -110,34 +110,35 @@ class display(api):
 			y += 18
 	def weatherRender(self):
 		self.weather=self.newWeatherHandler()
-		y=82
-		fontxB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 40)
-		fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 30)
-		fontM=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 22)
-		fontN=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 18)
-		fontS=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyh.ttc', 12)
+		y=80
+		fontxB=ImageFont.truetype('/root/ePaper/SCbold.ttf', 40)
+		fontB = ImageFont.truetype('/root/ePaper/SCbold.ttf', 30)
+		fontM = ImageFont.truetype('/root/ePaper/SCbold.ttf', 22)
+		fontN = ImageFont.truetype('/root/ePaper/SCbold.ttf', 18)
+		fontS = ImageFont.truetype(
+			'/usr/share/fonts/truetype/msfontscn/msyh.ttc', 12)
 		fontxS=ImageFont.truetype('/root/ePaper/pixelmix.ttf', 8)
-		fontSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 20)
-		fontMb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 24)
-		fontxSb=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/msyhbd.ttc', 14)
+		fontSb = ImageFont.truetype('/root/ePaper/SCbold.ttf', 20)
+		fontMb = ImageFont.truetype('/root/ePaper/SCbold.ttf', 24)
+		fontxSb = ImageFont.truetype('/root/ePaper/SCbold.ttf', 14)
 		try:
-			self.draw.text((0,y),self.weather["weather"],font=fontxB,fill=0)
-			self.draw.text((96,y-3),self.weather["wind"],font=fontS,fill=0)
+			self.draw.text((0,59),self.weather["temp"],font=fontN,fill=255)
+			self.draw.text((0,y-2),self.weather["weather"],font=fontxB,fill=0)
+			self.draw.text((96,y-1),self.weather["wind"],font=fontS,fill=0)
 			ttt1=255
 			ttt2=0
 			if int(self.weather["aqi"])>100:
 				ttt1=0
 				ttt2=255
-			self.draw.rectangle((153,y,self.WIDTH-1,y+12),outline=0,fill=ttt1)
-			self.draw.text((154,y-2),"%3s"%self.weather["aqi"],font=fontS,fill=ttt2)
-			y+=13
+			self.draw.rectangle((152,y+2,self.WIDTH-1,y+14),outline=0,fill=ttt1)
+			self.draw.text((154,y),"%3s"%self.weather["aqi"],font=fontS,fill=ttt2)
+			y+=16
 			self.draw.text((150,y),self.weather["time"],font=fontxS,fill=0)
 			self.draw.text((96,y),self.weather["pressure"],font=fontxS,fill=0)
-			self.draw.text((106,y+5),u"36h温度走势",font=fontS,fill=0)
-			y+=20
-			self.draw.text((0,y),self.weather["temp"],font=fontSb,fill=0)
+			self.draw.text((106,y+6),u"36h温度走势",font=fontS,fill=0)
+			y+=24
 			x=104
-			y+=20
+			y+=18
 			self.draw.text((106,y+24),u"36h风力走势",font=fontS,fill=0)
 			for detail in self.weather["detail"]:
 				if u"雨" in detail["weather"] or u"雪" in detail["weather"]:
@@ -148,21 +149,21 @@ class display(api):
 				ty=y+80
 				self.draw.rectangle((x,ty,x+2,ty-(detail["windRaw"])),outline=0,fill=tmpvar1)
 				x+=2
-			y+=6
+			y-=12
 			x=0
 			for future in self.weather["future"]:
 				if len(future["weather"])>3:
 					tmpvar =fontxSb
 				else:
-					tmpvar =fontN
-				self.draw.text((26,y),future["temp"],font=fontxSb,fill=0)
-				self.draw.text((0,y),future["week"],font=fontS,fill=0)
-				y+=15
-				self.draw.text((26,y-2),future["weather"],font=tmpvar,fill=0)
+					tmpvar =fontSb
+				self.draw.text((26,y),future["temp"],font=fontN,fill=0)
+				self.draw.text((0,y+2),future["week"],font=fontS,fill=0)
+				y+=19
+				self.draw.text((26,y-1),future["weather"],font=tmpvar,fill=0)
 				# self.draw.text((0,y),future["wind"],font=fontS,fill=0)
-				self.draw.text((0,y),future["sunrise"],font=fontxS,fill=0)
-				self.draw.text((0,y+8),future["sunset"],font=fontxS,fill=0)
-				y+=17
+				self.draw.text((0,y+1),future["sunrise"],font=fontxS,fill=0)
+				self.draw.text((0,y+11),future["sunset"],font=fontxS,fill=0)
+				y+=19
 		except Exception as e:
 			self.error=True
 			if self.weather.has_key("Error"):
