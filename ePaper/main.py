@@ -42,8 +42,8 @@ class display(api):
 	def messageRender(self):
 		if self.message and self.info:
 			fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 24)
-			self.draw.rectangle(( 0, 0, self.WIDTH, self.HEIGHT), fill = 0)
-			self.draw.text((0,28),self.info,font=fontB,fill=255)
+			self.draw.rectangle(( 0, 82, self.WIDTH, self.HEIGHT), fill = 0)
+			self.draw.text((0,88),self.info,font=fontB,fill=255)
 			self.message=None
 			self.info=None
 	def show(self,image):
@@ -89,7 +89,6 @@ class display(api):
 		self.draw.text((116, -1), now.strftime(u"%m-%d"), font=fontS, fill=0)
 		self.draw.text((0, -1),text, font=fontS, fill=0)
 		self.draw.line((0,14,self.WIDTH,14),fill=0)
-
 	def settingShow(self, draw):
 		self.smallTimeRender(self.draw, "设置")
 		fontB = ImageFont.truetype('C:/Windows/Fonts/Dengb.ttf', 32)
@@ -174,8 +173,8 @@ class display(api):
 	def errorRender(self):
 		if self.einfo and self.error:
 			fontB=ImageFont.truetype('/usr/share/fonts/truetype/msfontscn/Dengb.ttf', 28)
-			self.draw.rectangle(( 0, 0, self.WIDTH, self.HEIGHT), fill = 0)
-			self.draw.text((0,50),self.einfo,font=fontB,fill=255)
+			self.draw.rectangle(( 0, 82, self.WIDTH, self.HEIGHT), fill = 0)
+			self.draw.text((0,88),self.einfo,font=fontB,fill=255)
 			self.error=False
 			self.einfo=None			
 	def quit(self):

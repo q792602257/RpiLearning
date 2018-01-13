@@ -12,6 +12,7 @@ class api():
 	# opener.cookies=MozillaCookieJar()
 	times=0
 	headers={"Connection": "Keep-Alive","User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"}
+	oldret={"Error":"No Network"}
 	def getHTML(self,url,method="GET",data=None):
 		try:
 			if method=="GET":
@@ -134,8 +135,8 @@ class api():
 			d=u""
 		return "%s%s"%(d,s)
 	def newWeatherHandler(self):
-		code="101240201"
-		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=29.721263&longitude=115.999853&isLocated=true&locationKey=weathercn:%s&days=15&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&romVersion=7.11.9&appVersion=102&alpha=false&isGlobal=false&device=ido&modDevice=ido_xhdpi&locale=zh_cn"%code
+		code="101020300"
+		url="https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=31.409785&longitude=121.488975&isLocated=true&locationKey=weathercn:%s&days=15&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&romVersion=7.11.9&appVersion=102&alpha=false&isGlobal=false&device=ido&modDevice=ido_xhdpi&locale=zh_cn"%code
 		if self.times>5 or self.times==0:
 			html = self.getHTML(url)
 			self.times=1
